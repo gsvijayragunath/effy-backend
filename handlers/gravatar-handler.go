@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"crypto/md5"
+	"effy/gravatar-profile-card/models"
 	"encoding/hex"
 	"encoding/json"
 	"io"
 	"net/http"
-	"effy/gravatar-profile-card/models"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -49,16 +50,21 @@ func Gravatar(c *gin.Context) {
 
 	jsonURL, imageURL := CreateGravatarURL(user.Email)
 	jsonDetails, err := FetchGravatarDetails(jsonURL)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch Gravatar details", "error": err.Error()})
 		return
 	}
+	// if err := db.DB.Create(&user).Error; err != nil {
+	// 	c.JSON(http.StatusInternalServerError,gin.H{"message":"Failed to store in database"})
+	// 	return
+	// }
 
 	response := gin.H{
-		"image_url": imageURL,
-		"json_url":  jsonURL,
-		"json_details":jsonDetails,
-		"form_details":user,
+		"image_url":    imageURL,
+		"json_url":     jsonURL,
+		"json_details": jsonDetails,
+		"form_details": user,
 	}
 
 	c.JSON(http.StatusOK, response)

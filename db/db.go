@@ -21,7 +21,7 @@ func InitDB() error {
     if err != nil {
         log.Fatalf("Error loading .env file: %v", err)
     }
-	AuthKey = os.Getenv("AUTH_KEY")
+	AuthKey = os.Getenv("AUTH_KEY  ")
     log.Println("Connecting to database...")
     dsn := fmt.Sprintf("host=%s user=%s dbname=%s password=%s port=%s sslmode=%s",
         os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"),

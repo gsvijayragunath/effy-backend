@@ -18,10 +18,9 @@ type User struct {
 	UserID          uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"user_id"`
 	Name            string    `json:"name" binding:"required"`
 	Email           string    `gorm:"uniqueIndex;not null" json:"email" binding:"required"`
-	Address         string    `json:"address" binding:"required"`
+	Country         string    `json:"country" binding:"required"`
 	UserType        string    `json:"user_type" binding:"required"`
 	Password        string    `json:"password" binding:"required"`
-	ProfileHeadline string    `json:"profile_headline"`
 }
 
 type Signin struct {

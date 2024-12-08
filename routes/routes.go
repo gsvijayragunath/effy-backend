@@ -7,6 +7,8 @@ import (
 )
 
 func Routes(server *gin.Engine) {
+
+	authHandler := handlers.NewAuthHandler()
 	server.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000", "http://yourfrontenddomain.com"}, 
 		AllowMethods:     []string{"GET", "POST", "OPTIONS"},  
@@ -15,4 +17,7 @@ func Routes(server *gin.Engine) {
 	}))
 
 	server.POST("/gravatardata", handlers.Gravatar)
+
+	server.POST("/signup",authHandler.Signup)
+	server.POST("/signin",authHandler.Signin)
 }

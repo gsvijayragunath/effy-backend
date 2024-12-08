@@ -41,7 +41,7 @@ func FetchGravatarDetails(jsonURL string) (map[string]interface{}, error) {
 }
 
 func Gravatar(c *gin.Context) {
-	var user models.User
+	var user models.Profile
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid Input", "error": err.Error()})
 		return

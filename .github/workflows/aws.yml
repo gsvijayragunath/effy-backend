@@ -60,5 +60,5 @@ jobs:
             sudo docker rm -f effy-gravatar-container || true
             
             # Run the Docker container
-            sudo docker run -d -p 8080:8080 --name effy-gravatar-container vijayragunathgs/effy-gravatar:latest
+            sudo docker run -d -p 8081:8080 --name effy-gravatar-container vijayragunathgs/effy-gravatar:latest
           EOF

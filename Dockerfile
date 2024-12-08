@@ -20,6 +20,6 @@ COPY prod.env .
 
 RUN chmod +x main
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["./main"]

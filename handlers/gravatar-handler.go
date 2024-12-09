@@ -2,11 +2,15 @@ package handlers
 
 import (
 	"crypto/md5"
+	"effy/gravatar-profile-card/db"
+	"effy/gravatar-profile-card/errors"
 	"effy/gravatar-profile-card/models"
+	"effy/gravatar-profile-card/utils"
 	"encoding/hex"
 	"encoding/json"
 	"io"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,29 +45,35 @@ func FetchGravatarDetails(jsonURL string) (map[string]interface{}, error) {
 }
 
 func Gravatar(c *gin.Context) {
-	var user models.Profile
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid Input", "error": err.Error()})
+	var profile models.Profile
+	if err := c.ShouldBindJSON(&profile); err != nil {
+		httpStatus, response := utils.RenderError(errors.ErrInvalidRequest, err.Error(), "Invalid Input")
+		c.JSON(httpStatus, response)
+		// c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid Input", "error": err.Error()})
 		return
 	}
 
-	jsonURL, imageURL := CreateGravatarURL(user.Email)
+	jsonURL, imageURL := CreateGravatarURL(profile.Email)
 	jsonDetails, err := FetchGravatarDetails(jsonURL)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch Gravatar details", "error": err.Error()})
 		return
 	}
-	// if err := db.DB.Create(&user).Error; err != nil {
-	// 	c.JSON(http.StatusInternalServerError,gin.H{"message":"Failed to store in database"})
-	// 	return
-	// }
+	
+	profile.ProfileImageURL = imageURL
+	profile.JsonURL = jsonURL
 
+	if err := db.DB.Create(&profile).Error; err != nil {
+		httpStatus, response := utils.RenderError(err, err.Error(), "Failed To Create User")
+		c.JSON(httpStatus, response)
+		return
+	}
 	response := gin.H{
 		"image_url":    imageURL,
 		"json_url":     jsonURL,
 		"json_details": jsonDetails,
-		"form_details": user,
+		"form_details": profile,
 	}
 
 	c.JSON(http.StatusOK, response)

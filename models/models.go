@@ -3,6 +3,7 @@ package models
 import "github.com/google/uuid"
 
 type Profile struct {
+	ProfileCardID   uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"profilecard_id"`
 	Email           string `json:"email" binding:"required"`
 	FullName        string `json:"full_name" binding:"required"`
 	Username        string `json:"user_name" binding:"required"`

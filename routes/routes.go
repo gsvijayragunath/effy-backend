@@ -9,6 +9,7 @@ import (
 func Routes(server *gin.Engine) {
 
 	authHandler := handlers.NewAuthHandler()
+	chandler := handlers.NewChandler()
 	server.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3000"}, 
 		AllowMethods:     []string{"GET", "POST","PUT","PATCH","DELETE","OPTIONS"},  
@@ -17,6 +18,7 @@ func Routes(server *gin.Engine) {
 	}))
 
 	server.POST("/gravatardata", handlers.Gravatar)
+	server.POST("/upload",chandler.UploadAndGeneratePublicURL)
 
 	server.POST("/signup",authHandler.Signup)
 	server.POST("/signin",authHandler.Signin)
